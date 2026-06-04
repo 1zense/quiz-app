@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация — QuizMaster{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="auth-card">
+        <div style="text-align:center; margin-bottom:8px; font-size:2.5rem;">🎉</div>
+        <h1 class="auth-title">Создать аккаунт</h1>
+        <p class="auth-subtitle">Присоединяйся к тысячам игроков!</p>
+
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                    <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% if field.help_text and field.name == 'password1' %}
+                <div style="color:var(--text-muted); font-size:0.78rem; margin-top:4px;">{{ field.help_text }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-primary btn-block" style="margin-top:8px;">
+                ✨ Зарегистрироваться
+            </button>
+        </form>
+
+        <div class="form-divider">Уже есть аккаунт?</div>
+        <a href="{% url 'accounts:login' %}" class="btn btn-secondary btn-block">
+            Войти
+        </a>
+    </div>
+</div>
+{% endblock %}

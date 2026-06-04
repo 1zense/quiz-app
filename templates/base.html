@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}QuizMaster{% endblock %}</title>
+    {% load static %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'quiz:home' %}" class="nav-logo">
+                <span class="logo-icon">🧠</span>
+                <span class="logo-text">QuizMaster</span>
+            </a>
+            <div class="nav-links">
+                <a href="{% url 'quiz:list' %}" class="nav-link">Викторины</a>
+                <a href="{% url 'leaderboard:leaderboard' %}" class="nav-link">Лидеры</a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'accounts:profile' %}" class="nav-link nav-user">
+                    <span class="user-level-badge">Ур.{{ user.level }}</span>
+                    {{ user.username }}
+                </a>
+                <a href="{% url 'accounts:logout' %}" class="btn btn-outline btn-sm">Выйти</a>
+                {% else %}
+                <a href="{% url 'accounts:login' %}" class="nav-link">Войти</a>
+                <a href="{% url 'accounts:register' %}" class="btn btn-primary btn-sm">Регистрация</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    {% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+        <div class="message message-{{ message.tags }}">
+            {{ message }}
+            <button onclick="this.parentElement.remove()" class="msg-close">✕</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <span>© 2026 QuizMaster — Проверь свои знания!</span>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

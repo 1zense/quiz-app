@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}{{ quiz.title }} — QuizMaster{% endblock %}
+
+{% block content %}
+<div class="quiz-detail">
+    <a href="{% url 'quiz:list' %}"
+        style="color:var(--text-muted); text-decoration:none; font-size:0.875rem; display:inline-flex; align-items:center; gap:6px; margin-bottom:20px;">
+        ← Назад к списку
+    </a>
+
+    <div class="quiz-detail-header">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <span class="quiz-category-badge" style="font-size:0.85rem; padding:4px 14px;">
+                {{ quiz.category.icon }} {{ quiz.category.name }}
+            </span>
+            <span
+                style="background:rgba(0,0,0,0.3); color:{{ quiz.difficulty_color }}; padding:4px 14px; border-radius:20px; font-size:0.85rem; font-weight:600;">
+                {{ quiz.difficulty_label }}
+            </span>
+        </div>
+        <h1 style="font-size:2rem; font-weight:900; margin-bottom:12px;">{{ quiz.title }}</h1>
+        <p style="color:var(--text-muted);">{{ quiz.description }}</p>
+        <div class="quiz-meta-row">
+            <span class="quiz-meta-tag">❓ {{ quiz.question_count }} вопросов</span>
+            <span class="quiz-meta-tag">⏱ {{ quiz.time_limit }} сек. на вопрос</span>
+            <span class="quiz-meta-tag">▶️ {{ quiz.play_count }} прохождений</span>
+            <span class="quiz-meta-tag">👤 {{ quiz.created_by.username }}</span>
+        </div>
+    </div>
+
+    <div class="quiz-start-section">
+        <div style="font-size:2.5rem; margin-bottom:12px;">🎯</div>
+        <h2 style="font-size:1.25rem; font-weight:800; margin-bottom:8px;">Готов проверить знания?</h2>
+        {% if best_score is not None %}
+        <p style="color:var(--text-muted); margin-bottom:16px;">
+            Твой лучший результат: <strong style="color:var(--secondary);">{{ best_score }} очков</strong>
+        </p>
+        {% else %}
+        <p style="color:var(--text-muted); margin-bottom:16px;">Ты ещё не проходил эту викторину</p>
+        {% endif %}
+        <a href="{% url 'quiz:start' quiz.pk %}" class="btn btn-primary btn-lg">
+            🚀 Начать викторину
+        </a>
+    </div>
+
+    {% if user_sessions %}
+    <div>
+        <h3 style="font-weight:700; margin-bottom:16px;">📊 История прохождений</h3>
+        <div class="history-table">
+            <div class="history-row header">
+                <span>Дата</span>
+                <span>Очки</span>
+                <span>Точность</span>
+                <span>Стрик</span>
+            </div>
+            {% for session in user_sessions %}
+            <div class="history-row">
+                <span style="color:var(--text-muted);">{{ session.finished_at|date:"d.m.Y H:i" }}</span>
+                <span style="color:var(--secondary); font-weight:700;">{{ session.score }}</span>
+                <span>{{ session.accuracy }}%</span>
+                <span>🔥{{ session.max_streak }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

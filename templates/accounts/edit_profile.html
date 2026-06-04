@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Редактировать профиль — QuizMaster{% endblock %}
+
+{% block content %}
+<div class="form-container" style="max-width:540px;">
+    <h1 style="font-size:1.75rem; font-weight:800; margin-bottom:24px; text-align:center;">✏️ Редактировать профиль</h1>
+    <div class="auth-card">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+            <div class="form-group">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                    <div class="form-error">{{ error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            {% endfor %}
+            <div style="display:flex; gap:12px; margin-top:8px;">
+                <button type="submit" class="btn btn-primary" style="flex:1; justify-content:center;">💾 Сохранить</button>
+                <a href="{% url 'accounts:profile' %}" class="btn btn-secondary" style="flex:1; justify-content:center;">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

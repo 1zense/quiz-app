@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Викторины — QuizMaster{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">🎯 Все викторины</h1>
+        <p class="page-subtitle">Выбери категорию и уровень сложности</p>
+    </div>
+
+    <div class="filter-bar">
+        <a href="{% url 'quiz:list' %}"
+            class="filter-btn {% if not selected_category and not selected_difficulty %}active{% endif %}">Все</a>
+        <div class="filter-sep"></div>
+        {% for cat in categories %}
+        <a href="{% url 'quiz:list' %}?category={{ cat.id }}{% if selected_difficulty %}&difficulty={{ selected_difficulty }}{% endif %}"
+            class="filter-btn {% if selected_category == cat.id|stringformat:'s' %}active{% endif %}">
+            {{ cat.icon }} {{ cat.name }}
+        </a>
+        {% endfor %}
+        <div class="filter-sep"></div>
+        <a href="{% url 'quiz:list' %}{% if selected_category %}?category={{ selected_category }}&difficulty=easy{% else %}?difficulty=easy{% endif %}"
+            class="filter-btn {% if selected_difficulty == 'easy' %}active{% endif %}" style="color:#22c55e;">
+            Лёгкий
+        </a>
+        <a href="{% url 'quiz:list' %}{% if selected_category %}?category={{ selected_category }}&difficulty=medium{% else %}?difficulty=medium{% endif %}"
+            class="filter-btn {% if selected_difficulty == 'medium' %}active{% endif %}" style="color:#f59e0b;">
+            Средний
+        </a>
+        <a href="{% url 'quiz:list' %}{% if selected_category %}?category={{ selected_category }}&difficulty=hard{% else %}?difficulty=hard{% endif %}"
+            class="filter-btn {% if selected_difficulty == 'hard' %}active{% endif %}" style="color:#ef4444;">
+            Сложный
+        </a>
+    </div>
+
+    {% if quizzes %}
+    <div class="card-grid">
+        {% for quiz in quizzes %}
+        <a href="{% url 'quiz:detail' quiz.pk %}" class="card quiz-card">
+            <div class="quiz-card-header">
+                <span class="quiz-category-badge">{{ quiz.category.icon }} {{ quiz.category.name }}</span>
+                <span class="quiz-difficulty" style="background:rgba(0,0,0,0.3); color:{{ quiz.difficulty_color }};">
+                    {{ quiz.difficulty_label }}
+                </span>
+            </div>
+            <div class="quiz-card-title">{{ quiz.title }}</div>
+            <div class="quiz-card-desc">{{ quiz.description|truncatechars:120 }}</div>
+            <div class="quiz-card-footer">
+                <span class="quiz-meta-item">❓ {{ quiz.question_count }} вопросов</span>
+                <span class="quiz-meta-item">▶️ {{ quiz.play_count }} игр</span>
+                <span class="quiz-meta-item">⏱ {{ quiz.time_limit }}с</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="text-align:center; padding:80px 24px; color:var(--text-muted);">
+        <div style="font-size:3rem; margin-bottom:16px;">🔍</div>
+        <h3 style="font-size:1.25rem; margin-bottom:8px;">Викторины не найдены</h3>
+        <p>Попробуй изменить фильтры</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

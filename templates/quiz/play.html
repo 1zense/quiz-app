@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% block title %}{{ session.quiz.title }} — QuizMaster{% endblock %}
+
+{% block content %}
+<div class="play-container">
+    <div class="play-header">
+        <div class="play-progress">
+            <div class="play-progress-text">
+                <span>Вопрос {{ question_number }} из {{ total_questions }}</span>
+                <span>{{ progress }}%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:{{ progress }}%"></div>
+            </div>
+        </div>
+
+        <div class="streak-display" id="streak-display">
+            🔥 <span id="streak-count">{{ session.streak }}</span>
+        </div>
+
+        <div class="score-display">
+            <div class="score-label">ОЧКИ</div>
+            <div class="score-value" id="score-value">{{ session.score }}</div>
+        </div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+        <div class="timer-bar">
+            <div class="timer-fill" id="timer-fill" style="width:100%"></div>
+        </div>
+        <div class="timer-text">Осталось: <span id="timer-text">{{ time_limit }}</span> сек.</div>
+    </div>
+
+    <div class="question-card">
+        <div class="question-number">Вопрос {{ question_number }} / {{ total_questions }}</div>
+        <div class="question-text">{{ question.text }}</div>
+    </div>
+
+    <div class="answers-grid" id="answers-grid">
+        {% for answer in answers %}
+        <button class="answer-btn" data-answer-id="{{ answer.id }}" onclick="selectAnswer({{ answer.id }}, this)">
+            {{ answer.text }}
+        </button>
+        {% endfor %}
+    </div>
+
+    <div id="explanation-box" style="display:none;" class="explanation-box">
+        <h4>💡 Пояснение</h4>
+        <p id="explanation-text"></p>
+    </div>
+
+    <button id="next-btn" class="next-btn" style="display:none;" onclick="nextQuestion()">
+        {% if question_number == total_questions %}
+        Завершить викторину ✅
+        {% else %}
+        Следующий вопрос →
+        {% endif %}
+    </button>
+</div>
+
+<script>
+    const SESSION_ID = {{ session.id }};
+    const TIME_LIMIT = {{ time_limit }};
+    const IS_LAST = {{ question_number }} === {{ total_questions }};
+    const FINISH_URL = '{% url "quiz:finish" session.id %}';
+    const CSRF_TOKEN = '{{ csrf_token }}';
+
+    let timeLeft = TIME_LIMIT;
+    let startTime = Date.now();
+    let timerInterval = null;
+    let answered = false;
+
+    function startTimer() {
+        const fill = document.getElementById('timer-fill');
+        const text = document.getElementById('timer-text');
+
+        timerInterval = setInterval(function () {
+            timeLeft--;
+            const pct = (timeLeft / TIME_LIMIT) * 100;
+            fill.style.width = pct + '%';
+            text.textContent = timeLeft;
+
+            if (timeLeft <= 5) {
+                fill.classList.add('warning');
+            }
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                if (!answered) {
+                    autoSubmit();
+                }
+            }
+        }, 1000);
+    }
+
+    function autoSubmit() {
+        answered = true;
+        document.querySelectorAll('.answer-btn').forEach(b => b.disabled = true);
+        submitAnswer(null, Math.round((Date.now() - startTime) / 1000));
+    }
+
+    function selectAnswer(answerId, btn) {
+        if (answered) return;
+        answered = true;
+        clearInterval(timerInterval);
+
+        document.querySelectorAll('.answer-btn').forEach(b => {
+            b.disabled = true;
+            b.classList.remove('selected');
+        });
+        btn.classList.add('selected');
+
+        const timeTaken = Math.round((Date.now() - startTime) / 1000);
+        submitAnswer(answerId, timeTaken);
+    }
+
+    function submitAnswer(answerId, timeTaken) {
+        fetch(`/play/${SESSION_ID}/submit/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': CSRF_TOKEN,
+            },
+            body: JSON.stringify({ answer_id: answerId, time_taken: timeTaken })
+        })
+            .then(r => r.json())
+            .then(data => {
+                const buttons = document.querySelectorAll('.answer-btn');
+                buttons.forEach(btn => {
+                    const bid = parseInt(btn.dataset.answerId);
+                    if (bid === data.correct_answer_id) {
+                        btn.classList.add('correct');
+                    } else if (btn.classList.contains('selected') && !data.is_correct) {
+                        btn.classList.add('wrong');
+                    }
+                });
+
+                // Update score
+                document.getElementById('score-value').textContent = data.total_score;
+
+                // Update streak
+                document.getElementById('streak-count').textContent = data.streak;
+
+                // Show explanation
+                if (data.explanation) {
+                    document.getElementById('explanation-text').textContent = data.explanation;
+                    document.getElementById('explanation-box').style.display = 'block';
+                }
+
+                // Show points earned
+                if (data.is_correct && data.points_earned > 0) {
+                    showPointsPopup('+' + data.points_earned);
+                }
+
+                document.getElementById('next-btn').style.display = 'block';
+            });
+    }
+
+    function showPointsPopup(text) {
+        const popup = document.createElement('div');
+        popup.textContent = text;
+        popup.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-80px);background:linear-gradient(135deg,#6366f1,#f59e0b);color:white;padding:10px 24px;border-radius:30px;font-size:1.5rem;font-weight:900;z-index:999;animation:floatUp 1.5s ease forwards;pointer-events:none;';
+        document.body.appendChild(popup);
+
+        const style = document.createElement('style');
+        style.textContent = '@keyframes floatUp{0%{opacity:1;transform:translate(-50%,-80px)}100%{opacity:0;transform:translate(-50%,-160px)}}';
+        document.head.appendChild(style);
+
+        setTimeout(() => popup.remove(), 1500);
+    }
+
+    function nextQuestion() {
+        if (IS_LAST) {
+            window.location.href = FINISH_URL;
+        } else {
+            window.location.reload();
+        }
+    }
+
+    startTimer();
+</script>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Таблица лидеров — QuizMaster{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1 class="page-title">🏆 Таблица лидеров</h1>
+        <p class="page-subtitle">Лучшие игроки QuizMaster</p>
+        {% if user.is_authenticated and user_rank %}
+        <div style="margin-top:12px; display:inline-block; background:rgba(99,102,241,0.15); border:1px solid var(--primary); padding:8px 20px; border-radius:20px; font-size:0.875rem;">
+            Твоя позиция: <strong style="color:var(--primary-light);">#{{ user_rank }}</strong>
+            &nbsp;|&nbsp; Очков: <strong style="color:var(--secondary);">{{ user.total_points }}</strong>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="leaderboard-table">
+        <div class="lb-row header">
+            <span>#</span>
+            <span>Игрок</span>
+            <span>Очки</span>
+            <span>Пройдено</span>
+            <span>Точность</span>
+        </div>
+        {% for entry in leaderboard_data %}
+        <div class="lb-row {% if entry.is_current %}highlight{% endif %}">
+            <div class="lb-rank {% if entry.rank == 1 %}gold{% elif entry.rank == 2 %}silver{% elif entry.rank == 3 %}bronze{% endif %}">
+                {% if entry.rank == 1 %}🥇
+                {% elif entry.rank == 2 %}🥈
+                {% elif entry.rank == 3 %}🥉
+                {% else %}#{{ entry.rank }}{% endif %}
+            </div>
+            <div class="lb-user">
+                <a href="{% url 'accounts:public_profile' entry.user.username %}" style="display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;">
+                    <div class="lb-avatar">
+                        {% if entry.user.avatar %}
+                            <img src="{{ entry.user.avatar.url }}" alt="">
+                        {% else %}
+                            {{ entry.user.username|first|upper }}
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div class="lb-username">{{ entry.user.username }}</div>
+                        <div class="lb-level">{{ entry.user.level_name }} · Ур.{{ entry.user.level }}</div>
+                    </div>
+                </a>
+            </div>
+            <div class="lb-points">{{ entry.points }}</div>
+            <div class="lb-quizzes">{{ entry.quizzes }} викторин</div>
+            <div class="lb-accuracy">{{ entry.accuracy }}%</div>
+        </div>
+        {% empty %}
+        <div style="text-align:center; padding:48px; color:var(--text-muted);">
+            Пока никто не играл. Будь первым!
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

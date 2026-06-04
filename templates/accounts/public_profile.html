@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}{{ profile_user.username }} — QuizMaster{% endblock %}
+
+{% block content %}
+<div class="profile-header">
+    <div class="container">
+        <div class="profile-info">
+            <div class="avatar-circle" style="width:90px;height:90px;font-size:2.2rem;">
+                {% if profile_user.avatar %}
+                    <img src="{{ profile_user.avatar.url }}" alt="">
+                {% else %}
+                    {{ profile_user.username|first|upper }}
+                {% endif %}
+            </div>
+            <div>
+                <div class="profile-name">{{ profile_user.username }}</div>
+                <div class="profile-level">
+                    <span class="level-badge">Уровень {{ profile_user.level }}</span>
+                    <span class="level-name">{{ profile_user.level_name }}</span>
+                </div>
+                {% if profile_user.bio %}<div class="profile-bio">{{ profile_user.bio }}</div>{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container section">
+    <div class="stats-grid" style="margin-bottom:32px;">
+        <div class="stat-card">
+            <div class="stat-card-value" style="color:var(--secondary);">{{ profile_user.total_points }}</div>
+            <div class="stat-card-label">Очков</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-value">{{ profile_user.quizzes_completed }}</div>
+            <div class="stat-card-label">Пройдено</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-value" style="color:var(--success);">{{ profile_user.accuracy }}%</div>
+            <div class="stat-card-label">Точность</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-card-value">{{ achievements.count }}</div>
+            <div class="stat-card-label">Достижений</div>
+        </div>
+    </div>
+
+    {% if achievements %}
+    <h3 style="font-weight:800; margin-bottom:16px;">🏆 Достижения</h3>
+    <div class="achievements-grid" style="margin-bottom:32px;">
+        {% for ua in achievements %}
+        <div class="achievement-card earned">
+            <div class="achievement-icon">{{ ua.achievement.icon }}</div>
+            <div>
+                <div class="achievement-name">{{ ua.achievement.name }}</div>
+                <div class="achievement-desc">{{ ua.achievement.description }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if recent_sessions %}
+    <h3 style="font-weight:800; margin-bottom:16px;">📊 Последние прохождения</h3>
+    <div class="history-table">
+        <div class="history-row header">
+            <span>Викторина</span><span>Очки</span><span>Точность</span><span>Дата</span>
+        </div>
+        {% for session in recent_sessions %}
+        <div class="history-row">
+            <span>{{ session.quiz.title }}</span>
+            <span style="color:var(--secondary); font-weight:700;">{{ session.score }}</span>
+            <span>{{ session.accuracy }}%</span>
+            <span style="color:var(--text-muted);">{{ session.finished_at|date:"d.m.Y" }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
