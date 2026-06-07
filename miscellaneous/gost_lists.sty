@@ -1,0 +1,158 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{gost_lists}[2024/01/15 GOST compliant lists for Russian documents]
+
+\RequirePackage{enumitem}
+\RequirePackage{polyglossia}
+\RequirePackage{fontspec}
+
+% Настройка отступов по ГОСТ
+% ГОСТ требует:
+% - Красная строка (абзацный отступ) - 1.25 см или 5 знаков
+% - Отступ маркера от левого края - зависит от уровня
+% - Расстояние между маркером и текстом - одно тире или пробел
+
+\newlength{\gostParIndent}
+\setlength{\gostParIndent}{1.5em}
+
+% Основные настройки для списков
+\setlist{
+    nosep,                       % Убираем лишние вертикальные отступы
+    leftmargin=*,                % Выравнивание по левому краю
+    labelindent=\gostParIndent,  % Отступ для маркера
+    labelsep=0.5em,              % Расстояние между маркером и текстом
+    itemindent=1.2cm,
+    align=left,                  % Выравнивание маркера
+    parsep=0pt,                  % Отступ между абзацами внутри пункта
+    itemsep=0pt,                 % Отступ между пунктами
+    topsep=0pt,                  % Отступ сверху
+    partopsep=0pt,               % Отступ при разрыве страницы
+    before=\setlength{\parindent}{0em}, % Убираем абзацный отступ внутри списка
+    after=\vspace{0em}           % Убираем дополнительный отступ после списка
+}
+
+% Маркированный список первый уровень (● — жирная точка)
+\setlist[itemize,1]{
+    label=\textbullet,
+    leftmargin=*,
+    labelindent=\gostParIndent,
+    labelsep=0.5em
+}
+
+% Маркированный список второй уровень (— — длинное тире)
+\setlist[itemize,2]{
+    label=\textemdash,
+    leftmargin=*,
+    labelindent=\gostParIndent + 1.25cm,  % Увеличенный отступ
+    labelsep=0.5em
+}
+
+% Маркированный список третий уровень (• — маленькая точка)
+\setlist[itemize,3]{
+    label=\(\cdot\),
+    leftmargin=*,
+    labelindent=\gostParIndent + 2.5cm,
+    labelsep=0.5em
+}
+
+% Нумерованный список по ГОСТ
+\setlist[enumerate,1]{
+    label=\arabic*),
+    leftmargin=*,
+    labelindent=\gostParIndent,
+    labelsep=0.5em,
+    ref=\arabic*
+}
+
+\setlist[enumerate,2]{
+    label=\asbuk*),
+    leftmargin=*,
+    labelindent=\gostParIndent + 1.25cm,
+    labelsep=0.5em
+}
+
+\setlist[enumerate,3]{
+    label=\arabic*),
+    leftmargin=*,
+    labelindent=\gostParIndent + 2.5cm,
+    labelsep=0.5em
+}
+
+% Описательный список по ГОСТ
+\setlist[description]{
+    leftmargin=\gostParIndent,
+    labelindent=0pt,
+    labelsep=0.5em,
+    font=\normalfont\bfseries
+}
+
+% Команда для маркированного списка с отступом 5 знаков
+\newenvironment{gostItemize}{
+    \begin{itemize}
+    \setlength{\labelindent}{\gostParIndent}
+}{
+    \end{itemize}
+}
+
+% Команда для вложенного маркированного списка
+\newenvironment{gostSubItemize}{
+    \begin{itemize}
+    \setlength{\labelindent}{\dimexpr\gostParIndent + 1.25cm\relax}
+    \setlist{label=\textemdash}
+}{
+    \end{itemize}
+}
+
+% Утилита для создания списка с кастомным маркером
+\newenvironment{gostCustomItemize}[1][\textbullet]{
+    \begin{itemize}[label={#1}]
+}{
+    \end{itemize}
+}
+
+% Команды для быстрого создания списков
+\newcommand{\gostliststart}{%
+    \setlength{\parindent}{0pt}%
+    \setlength{\parskip}{0pt}%
+}
+
+% Настройка для двухколоночных списков
+\newenvironment{gostDoubleColumnItemize}{
+    \begin{itemize}[
+        label=\textbullet,
+        leftmargin=*,
+        labelindent=\gostParIndent,
+        before=\begin{minipage}[t]{\linewidth},
+        after=\end{minipage}
+    ]
+}{
+    \end{itemize}
+}
+
+% Список без отступа (для титульных листов и аннотаций)
+\newenvironment{gostNoIndentItemize}{
+    \begin{itemize}[
+        label=\textbullet,
+        leftmargin=*,
+        labelindent=0pt,
+        labelsep=1em
+    ]
+}{
+    \end{itemize}
+}
+
+% Проверка и использование подходящих шрифтов для кириллицы
+\IfFontExistsTF{Liberation Sans}{
+    \setmonofont{Liberation Mono}[
+        Script=Cyrillic,
+        Scale=MatchLowercase
+    ]
+}{
+    \IfFontExistsTF{Consolas}{
+        \setmonofont{Consolas}[
+            Script=Cyrillic,
+            Scale=MatchLowercase
+        ]
+    }{}
+}
+
+\endinput

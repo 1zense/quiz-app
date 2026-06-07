@@ -2,6 +2,8 @@
 % Автор: Калитвин В.А. 
 % kalitvinv@yandex.ru
 
+% Внесены изменения Конюховым М.В.
+
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{timcw}[Course work style]
 
@@ -26,6 +28,12 @@
   {\chaptername\ \thechapter.}                    % как выводить номер
   {1em}                            % отступ между номером и текстом
   {}                               % дополнительный код перед заголовком
+
+  % Убираем огромные отступы вокруг главы
+\titlespacing{\chapter}
+  {0pt}   % отступ слева
+  {-2em}  % отступ сверху (уменьшаем)
+  {2em} % отступ снизу
 
 % Глава в содержании: 14pt, межстрочный 16pt, жирный
 %\renewcommand{\thechapter}{\arabic{chapter}}
