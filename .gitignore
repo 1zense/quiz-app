@@ -12,7 +12,7 @@ wheels/
 # Other
 *.log
 *.synctex.gz
-*.toc
-*.aux
+# *.toc
+# *.aux
 *fdb_latexmk
 *.fls
