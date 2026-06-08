@@ -40,6 +40,14 @@
 %\renewcommand{\chaptermark}[1]{\markboth{Глава \thechapter. #1}{}}
 
 \usepackage{tocloft}
+% Включить точки-заполнители для всех уровней
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+
+% Если нужно больше точек
+\renewcommand{\cftdot}{.}
+\renewcommand{\cftdotsep}{1}
 
 % "Глава 1." перед названием в оглавлении
 \renewcommand{\cftchappresnum}{Глава~} % префикс
@@ -165,16 +173,16 @@
 
 % --- Удобные команды для Введения, Заключения, Приложений ---
 \newcommand{\intro}{%
-  \addcontentsline{toc}{chapter}{Введение}%
+  \addcontentsline{toc}{chapter}{\ Введение}%
   \chapter*{Введение}%
 }
 
 \newcommand{\conclusion}{%
-  \addcontentsline{toc}{chapter}{Заключение}%
+  \addcontentsline{toc}{chapter}{\ Заключение}%
   \chapter*{Заключение}%
 }
 
 \newcommand{\applications}{%
-  \addcontentsline{toc}{chapter}{Приложения}%
+  \addcontentsline{toc}{chapter}{\ Приложения}%
   \chapter*{Приложения}%
 }
