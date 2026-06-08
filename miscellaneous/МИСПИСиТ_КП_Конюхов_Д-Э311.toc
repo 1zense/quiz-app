@@ -1,19 +1,19 @@
 \xpg@aux {}{russian}
 \xpg@aux {}{russian}
 \contentsline {chapter}{\ Введение}{3}{Doc-Start}%
-\contentsline {chapter}{\numberline {1.\hspace {0.5em}}Теоретическая часть}{5}{chapter.1}%
-\contentsline {section}{\numberline {1.1.\relax }Обзор предметной области}{5}{section.1.1}%
-\contentsline {section}{\numberline {1.2.\relax }Теоретические основы геймификации}{6}{section.1.2}%
-\contentsline {section}{\numberline {1.3.\relax }Анализ существующих решений}{8}{section.1.3}%
-\contentsline {section}{\numberline {1.4.\relax }Функциональные требования}{10}{section.1.4}%
-\contentsline {section}{\numberline {1.5.\relax }Нефункциональные требования}{11}{section.1.5}%
-\contentsline {section}{\numberline {1.6.\relax }Выбор и обоснование технологического стека}{12}{section.1.6}%
-\contentsline {chapter}{\numberline {2.\hspace {0.5em}}Практическая часть}{14}{chapter.2}%
-\contentsline {section}{\numberline {2.1.\relax }Проектирование базы данных}{14}{section.2.1}%
-\contentsline {section}{\numberline {2.2.\relax }Структура проекта}{15}{section.2.2}%
-\contentsline {section}{\numberline {2.3.\relax }Описание реализованного функционала}{18}{section.2.3}%
-\contentsline {section}{\numberline {2.4.\relax }Демонстрация пользовательского интерфейса}{21}{section.2.4}%
-\contentsline {section}{\numberline {2.5.\relax }Что можно добавить в систему в будущем}{28}{section.2.5}%
-\contentsline {chapter}{\ Заключение}{31}{section.2.5}%
-\contentsline {chapter}{Список использованных источников}{33}{chapter*.13}%
-\contentsline {chapter}{\ Приложения}{35}{chapter*.14}%
+\contentsline {chapter}{\numberline {1.\hspace {0.5em}}Теоретическая часть}{4}{chapter.1}%
+\contentsline {section}{\numberline {1.1.\relax }Обзор предметной области}{4}{section.1.1}%
+\contentsline {section}{\numberline {1.2.\relax }Теоретические основы геймификации}{5}{section.1.2}%
+\contentsline {section}{\numberline {1.3.\relax }Анализ существующих решений}{7}{section.1.3}%
+\contentsline {section}{\numberline {1.4.\relax }Функциональные требования}{9}{section.1.4}%
+\contentsline {section}{\numberline {1.5.\relax }Нефункциональные требования}{10}{section.1.5}%
+\contentsline {section}{\numberline {1.6.\relax }Выбор и обоснование технологического стека}{11}{section.1.6}%
+\contentsline {chapter}{\numberline {2.\hspace {0.5em}}Практическая часть}{13}{chapter.2}%
+\contentsline {section}{\numberline {2.1.\relax }Проектирование базы данных}{13}{section.2.1}%
+\contentsline {section}{\numberline {2.2.\relax }Структура проекта}{14}{section.2.2}%
+\contentsline {section}{\numberline {2.3.\relax }Описание реализованного функционала}{17}{section.2.3}%
+\contentsline {section}{\numberline {2.4.\relax }Демонстрация пользовательского интерфейса}{20}{section.2.4}%
+\contentsline {section}{\numberline {2.5.\relax }Что можно добавить в систему в будущем}{27}{section.2.5}%
+\contentsline {chapter}{\ Заключение}{30}{section.2.5}%
+\contentsline {chapter}{Список использованных источников}{32}{chapter*.13}%
+\contentsline {chapter}{\ Приложения}{34}{chapter*.14}%
